@@ -11,7 +11,7 @@ const globalChannels = [
 module.exports = client => {
     //first some supportive buttons!
     let buttonrow = new Discord.MessageActionRow().addComponents([
-        new Discord.MessageButton().setStyle("LINK").setURL("https://discord.gg/milrato").setLabel("Support Server"),
+        new Discord.MessageButton().setStyle("LINK").setURL("https://discord.gg/p8Ctsm4z6R").setLabel("Support Server"),
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
     //now lets start!
