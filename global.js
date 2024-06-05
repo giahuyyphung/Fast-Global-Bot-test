@@ -6,10 +6,10 @@ const globalChannels = [
     "1247891607341236234"// UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
 
-const staffIds = ["1055695302386012212", "1242330820677603359", "948220309176221707"]; // Replace with actual staff member IDs
+const staffIds = ["1055695302386012212", "948220309176221707"]; // Replace with actual staff member IDs
 const botStaffIds = ["1112683447366991923", "1236505346814644326"]; // Replace with actual staff bot IDs
 const partneredServerIds = ["1090877567210356768","1220232261228564601", "1003698094187216898"]; // Replace with actual partnered server IDs
-const ownerIds = ["1015763488938938388", "1157629753742856222"]; // Replace with actual owner IDs
+const ownerIds = ["1015763488938938388", "1242330820677603359", "1157629753742856222"]; // Replace with actual owner IDs
 
 module.exports = client => {
     // First some supportive buttons!
@@ -18,8 +18,11 @@ module.exports = client => {
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
 
-    // Now let's start!
-    // By installing the npm modules!
+    // Helper function to get a random color
+    function getRandomColor() {
+        const colors = ["RED", "GREEN", "BLUE", "YELLOW", "PURPLE", "ORANGE", "PINK"];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
 
     client.on("messageCreate", async message => {
         // Return if a message is received from DMs, or an invalid guild, or from a BOT!
@@ -35,7 +38,7 @@ module.exports = client => {
 
             // Define the embed for sending into the channels
             const embed = new Discord.MessageEmbed()
-                .setColor("BLURPLE")
+                .setColor(getRandomColor())
                 .setAuthor(`${message.author.tag}`, message.member.displayAvatarURL({ dynamic: true, size: 256 }), "https://discord.gg/milrato")
                 .setThumbnail(message.member.displayAvatarURL({ dynamic: true, size: 256 })) // Message member could be the USER SERVER SPECIFIC AVATAR too!
                 .setFooter(`${message.guild.name}・${message.guild.memberCount} Members`, message.guild.iconURL({ dynamic: true, size: 256 }))
@@ -54,7 +57,7 @@ module.exports = client => {
             }
 
             // Add icons for staff, bot staff, and partnered servers
-            if (staffIds.includes(message.author.id)) {
+          if (staffIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hc_Moderator:1094886268942422097> ${embed.description}`);
             }
             if (ownerIds.includes(message.author.id)) {
