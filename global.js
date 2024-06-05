@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const globalChannels = [
-    "1245681386648506480",
-    "1216985264069541932" // UNAVAILABLE CHANNEL
+    "1246382467276079135",
+    "1247852737631354892" // UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
 
 const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
