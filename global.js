@@ -1,17 +1,18 @@
 const Discord = require("discord.js");
 const globalChannels = [
     "1246382467276079135",
-    "1247852737631354892",
+    "1247855628299272293",
     "1247855628299272293"// UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
 
-const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
-const partneredServerIds = ["1090877567210356768", "1220232261228564601"]; // Replace with actual partnered server IDs
+const staffIds = ["1015763488938938388", "1055695302386012212", "1242330820677603359", "948220309176221707"]; // Replace with actual staff member IDs
+const botStaffIds = ["1112683447366991923", "1236505346814644326"]; // Replace with actual staff bot IDs
+const partneredServerIds = ["1090877567210356768","1220232261228564601"]; // Replace with actual partnered server IDs
 
 module.exports = client => {
     // First some supportive buttons!
     let buttonrow = new Discord.MessageActionRow().addComponents([
-        new Discord.MessageButton().setStyle("LINK").setURL("https://discord.gg/p8Ctsm4z6R").setLabel("Support Server"),
+        new Discord.MessageButton().setStyle("LINK").setURL("https://discord.gg/milrato").setLabel("Support Server"),
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
 
@@ -46,6 +47,11 @@ module.exports = client => {
             // Check if the message author is a staff member and add an icon if true
             if (staffIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
+            }
+
+            // Check if the message author is a staff bot and add an icon if true
+            if (botStaffIds.includes(message.author.id)) {
+                embed.setDescription(`<a:staff:1091010733589930124> ${embed.description}`); // Replace <:bot_staff_icon:123456789012345678> with your actual emoji
             }
 
             // Check if the message is from a partnered server and add an icon if true
