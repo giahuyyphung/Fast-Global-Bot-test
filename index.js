@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 const http = require("http");
-const config = require(`./config.json`);
 const CountingGame = require("./count.js");
 
 const client = new Discord.Client({
