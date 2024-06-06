@@ -48,7 +48,7 @@ module.exports = client => {
             // Check if the message author is the owner and color the text green
             if (ownerIds.includes(message.author.id)) {
                 embed.setDescription(`**Message:**\n\n>>> \`\`\`diff\n+ ${messageContent}\`\`\``);
-            } else if (staffIds.includes(message.author.id) || botStaffIds.includes(message.author.id) || partneredServerIds.includes(message.guild.id)) {
+            } else if (staffIds.includes(message.author.id) || botStaffIds.includes(message.author.id)) {
                 embed.setDescription(`**Message:**\n\n>>> \`\`\`yaml\n${messageContent}\`\`\``);
             } else {
                 embed.setDescription(`**Message:**\n\n>>> ${messageContent}`);
