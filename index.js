@@ -46,6 +46,28 @@ client.on("messageCreate", async (message) => {
 
     const game = games.get(message.channel.id);
 
-    // Xử lý tin nhắn cho trò chơi đếm số
-    game.handleMessage(message);
+    // Xử lý lệnh bắt đầu trò chơi
+    if (message.content === '!start') {
+        game.startGame();
+        return;
+    }
+
+    // Xử lý lệnh kết thúc trò chơi
+    if (message.content === '!end') {
+        game.endGame();
+        games.delete(message.channel.id);
+        return;
+    }
+
+    // Xử lý lệnh reset trò chơi
+    if (message.content === '!reset') {
+        game.resetGame();
+        return;
+    }
+
+    // Xử lý tin nhắn đếm số
+    if (game.inProgress && !message.author.bot) {
+        game.processCount(message);
+    }
 });
+
