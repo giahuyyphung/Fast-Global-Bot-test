@@ -37,7 +37,7 @@ client.on("ready", () => {
 
 client.on("messageCreate", async (message) => {
     // Chỉ xử lý tin nhắn trong kênh quy định
-    if (message.channel.id !== '1248240086366027827') return;
+    if (message.channel.id !== '1248243718302208043') return;
 
     // Tạo một trò chơi mới nếu chưa có
     if (!games.has(message.channel.id)) {
