@@ -70,4 +70,3 @@ client.on("messageCreate", async (message) => {
         game.processCount(message);
     }
 });
-
