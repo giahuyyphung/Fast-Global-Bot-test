@@ -46,29 +46,34 @@ client.on("messageCreate", async (message) => {
 
     const game = games.get(message.channel.id);
 
-    // Bắt đầu trò chơi nếu có lệnh
+    // Xử lý lệnh bắt đầu trò chơi
     if (message.content === '!start') {
-        game.addPlayer(message.author);
+        if (!game.players.includes(message.author)) {
+            game.addPlayer(message.author);
+        }
         game.startGame();
         return;
     }
 
-    // Reset trò chơi nếu có lệnh
-    if (message.content === '!reset') {
-        game.resetGameCommand();
-        return;
-    }
-
-    // Kết thúc trò chơi
+    // Xử lý lệnh kết thúc trò chơi
     if (message.content === '!end') {
         game.endGame();
         games.delete(message.channel.id);
         return;
     }
 
+    // Xử lý lệnh reset trò chơi
+    if (message.content === '!reset') {
+        game.resetGame();
+        game.startGame();
+        return;
+    }
+
     // Xử lý từ nối
-    if (game.inProgress && message.author.bot === false) {
-        game.addPlayer(message.author);
+    if (game.inProgress && !message.author.bot) {
+        if (!game.players.includes(message.author)) {
+            game.addPlayer(message.author);
+        }
         game.processWord(message.content.trim(), message.author);
     }
 });
