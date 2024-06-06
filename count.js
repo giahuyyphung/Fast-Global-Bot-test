@@ -32,6 +32,7 @@ class CountingGame {
 
         // Kiểm tra nếu tin nhắn chứa hình ảnh
         if (message.attachments.size > 0) {
+            await message.react('❌');
             this.channel.send('Không chấp nhận hình ảnh. Trò chơi sẽ được reset.');
             this.resetGame();
             return;
@@ -40,6 +41,7 @@ class CountingGame {
         // Kiểm tra nếu người chơi nhập công thức toán học hoặc số
         const validExpression = /^[\d\s+\-*/()]+$/;
         if (!validExpression.test(content)) {
+            await message.react('❌');
             this.channel.send('Nhập không hợp lệ. Trò chơi sẽ được reset.');
             this.resetGame();
             return;
@@ -48,11 +50,13 @@ class CountingGame {
         try {
             const result = eval(content);
             if (result !== nextNumber) {
+                await message.react('❌');
                 this.channel.send(`Sai số! Bạn phải nhập số ${nextNumber}. Trò chơi sẽ được reset.`);
                 this.resetGame();
                 return;
             }
         } catch (error) {
+            await message.react('❌');
             this.channel.send('Nhập không hợp lệ. Trò chơi sẽ được reset.');
             this.resetGame();
             return;
@@ -60,6 +64,7 @@ class CountingGame {
 
         // Kiểm tra nếu người chơi đếm hai lần liên tiếp
         if (message.author.id === this.lastUser) {
+            await message.react('❌');
             this.channel.send('Bạn không thể đếm hai lần liên tiếp. Trò chơi sẽ được reset.');
             this.resetGame();
             return;
