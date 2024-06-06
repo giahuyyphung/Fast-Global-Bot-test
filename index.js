@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const http = require("http");
 const config = require(`./config.json`);
-const WordChainGame = require("./wordchain.js");
+const CountingGame = require("./count.js");
 
 const client = new Discord.Client({
     shards: "auto",
@@ -37,43 +37,15 @@ client.on("ready", () => {
 
 client.on("messageCreate", async (message) => {
     // Chỉ xử lý tin nhắn trong kênh quy định
-    if (message.channel.id !== '1245357473267716137') return;
+    if (message.channel.id !== '1248240086366027827') return;
 
     // Tạo một trò chơi mới nếu chưa có
     if (!games.has(message.channel.id)) {
-        games.set(message.channel.id, new WordChainGame(message.channel));
+        games.set(message.channel.id, new CountingGame(message.channel));
     }
 
     const game = games.get(message.channel.id);
 
-    // Xử lý lệnh bắt đầu trò chơi
-    if (message.content === '!start') {
-        if (!game.players.includes(message.author)) {
-            game.addPlayer(message.author);
-        }
-        game.startGame();
-        return;
-    }
-
-    // Xử lý lệnh kết thúc trò chơi
-    if (message.content === '!end') {
-        game.endGame();
-        games.delete(message.channel.id);
-        return;
-    }
-
-    // Xử lý lệnh reset trò chơi
-    if (message.content === '!reset') {
-        game.resetGame();
-        game.startGame();
-        return;
-    }
-
-    // Xử lý từ nối
-    if (game.inProgress && !message.author.bot) {
-        if (!game.players.includes(message.author)) {
-            game.addPlayer(message.author);
-        }
-        game.processWord(message.content.trim(), message.author);
-    }
+    // Xử lý tin nhắn cho trò chơi đếm số
+    game.handleMessage(message);
 });
