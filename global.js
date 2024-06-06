@@ -1,13 +1,13 @@
 const Discord = require("discord.js");
 const globalChannels = [
-    "1248167755404804166",
-    "1248167862837973004",
-    "1248167957880766535" // UNAVAILABLE CHANNEL
+    "1245682200662511667",
+    "1248167957880766535",
+    "1248167862837973004" // UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
 
 const staffIds = ["1242330820677603359", "1157629753742856222", "1055695302386012212", "948220309176221707"]; // Replace with actual staff member IDs
 const botStaffIds = ["1112683447366991923", "1236505346814644326"]; // Replace with actual staff bot IDs
-const partneredServerIds = ["1090877567210356768","1220232261228564601", "1003698094187216898"]; // Replace with actual partnered server IDs
+const partneredServerIds = ["1003698094187216898","1090877567210356768"]; // Replace with actual partnered server IDs
 const ownerIds = ["1015763488938938388"]; // Replace with actual owner IDs
 
 module.exports = client => {
