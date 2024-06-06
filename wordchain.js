@@ -18,16 +18,22 @@ class WordChainGame {
         }
 
         this.inProgress = true;
-        this.channel.send("Trò chơi nối từ đã bắt đầu! Người chơi đầu tiên hãy bắt đầu với một từ!");
-
-        // Đặt người chơi hiện tại là null để bắt đầu mới
-        this.lastPlayer = null;
+        this.channel.send("Trò chơi nối từ đã bắt đầu!");
+        this.setRandomWord();
     }
 
     addPlayer(player) {
         if (!this.players.includes(player)) {
             this.players.push(player);
         }
+    }
+
+    setRandomWord() {
+        const randomWords = ['con cá', 'cá chim', 'chim sẻ', 'sẻ non'];
+        this.currentWord = randomWords[Math.floor(Math.random() * randomWords.length)];
+        this.words.push(this.currentWord);
+        this.channel.send(`Từ bắt đầu là: **${this.currentWord}**`);
+        this.sendTurnMessage();
     }
 
     sendTurnMessage() {
@@ -37,21 +43,26 @@ class WordChainGame {
     processWord(word, player) {
         if (!this.inProgress) return;
 
-        if (player === this.lastPlayer) {
-            this.channel.send("Bạn không thể đi hai lượt liên tiếp!");
-            return;
-        }
-
+        // Kiểm tra xem từ có hợp lệ không
         if (!this.isValidWord(word)) {
             this.channel.send("Từ không hợp lệ hoặc đã được sử dụng, vui lòng thử lại!");
             return;
         }
 
-        if (!this.currentWord || word.startsWith(this.currentWord[this.currentWord.length - 1])) {
+        // Kiểm tra xem từ này có bắt đầu bằng ký tự của từ cuối cùng không
+        const lastChar = this.currentWord.split(' ').pop();
+        const firstChar = word.split(' ')[0];
+        if (!this.currentWord || firstChar === lastChar) {
             this.words.push(word);
             this.currentWord = word;
             this.lastPlayer = player;
             this.turn = (this.turn + 1) % this.players.length;
+
+            // Bỏ qua lượt nếu người chơi hiện tại là người chơi cuối cùng
+            if (this.players[this.turn] === this.lastPlayer) {
+                this.turn = (this.turn + 1) % this.players.length;
+            }
+
             this.sendTurnMessage();
         } else {
             this.channel.send("Từ phải bắt đầu bằng ký tự của từ cuối cùng!");
@@ -59,7 +70,12 @@ class WordChainGame {
     }
 
     isValidWord(word) {
-        if (this.words.includes(word) || word.split(' ').length !== 2) return false;
+        // Kiểm tra từ đã được sử dụng chưa
+        if (this.words.includes(word)) return false;
+
+        // Kiểm tra từ có đúng định dạng 2 chữ không
+        if (word.split(' ').length !== 2) return false;
+
         return true;
     }
 
@@ -75,11 +91,6 @@ class WordChainGame {
         this.turn = 0;
         this.inProgress = false;
         this.lastPlayer = null;
-    }
-
-    resetGameCommand() {
-        this.channel.send("Trò chơi đã được reset!");
-        this.resetGame();
     }
 }
 
