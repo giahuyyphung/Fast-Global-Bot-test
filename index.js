@@ -36,17 +36,14 @@ client.on("ready", () => {
 });
 
 client.on("messageCreate", async (message) => {
-    // Chỉ xử lý tin nhắn trong kênh quy định
     if (message.channel.id !== '1245357473267716137') return;
 
-    // Tạo một trò chơi mới nếu chưa có
     if (!games.has(message.channel.id)) {
         games.set(message.channel.id, new WordChainGame(message.channel));
     }
 
     const game = games.get(message.channel.id);
 
-    // Xử lý lệnh bắt đầu trò chơi
     if (message.content === '!start') {
         if (!game.players.includes(message.author)) {
             game.addPlayer(message.author);
@@ -55,32 +52,22 @@ client.on("messageCreate", async (message) => {
         return;
     }
 
-    // Xử lý lệnh kết thúc trò chơi
     if (message.content === '!end') {
         game.endGame();
         games.delete(message.channel.id);
         return;
     }
 
-    // Xử lý lệnh reset trò chơi
     if (message.content === '!reset') {
         game.resetGame();
         game.startGame();
         return;
     }
 
-    // Kiểm tra nếu người dùng gửi hình ảnh
-    if (message.attachments.size > 0) {
-        message.channel.send("Không gửi hình ảnh vào trò chơi!");
-        game.resetGame();
-        return;
-    }
-
-    // Xử lý từ nối
     if (game.inProgress && !message.author.bot) {
         if (!game.players.includes(message.author)) {
             game.addPlayer(message.author);
         }
-        game.processWord(message.content.trim(), message.author);
+        game.processWord(message, message.author);
     }
 });
