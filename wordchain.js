@@ -43,13 +43,18 @@ class WordChainGame {
     processWord(word, player) {
         if (!this.inProgress) return;
 
-        // Kiểm tra xem từ có hợp lệ không
-        if (!this.isValidWord(word)) {
-            this.channel.send("Từ không hợp lệ hoặc đã được sử dụng, vui lòng thử lại!");
+        if (this.lastPlayer === player) {
+            this.channel.send(`${player.username}, bạn không thể nối 2 lần liên tiếp.`);
+            this.resetGame();
             return;
         }
 
-        // Kiểm tra xem từ này có bắt đầu bằng ký tự của từ cuối cùng không
+        if (!this.isValidWord(word)) {
+            this.channel.send("Từ không hợp lệ hoặc đã được sử dụng, vui lòng thử lại!");
+            this.resetGame();
+            return;
+        }
+
         const lastChar = this.currentWord.split(' ').pop();
         const firstChar = word.split(' ')[0];
         if (!this.currentWord || firstChar === lastChar) {
@@ -58,24 +63,21 @@ class WordChainGame {
             this.lastPlayer = player;
             this.turn = (this.turn + 1) % this.players.length;
 
-            // Bỏ qua lượt nếu người chơi hiện tại là người chơi cuối cùng
             if (this.players[this.turn] === this.lastPlayer) {
                 this.turn = (this.turn + 1) % this.players.length;
             }
 
+            this.channel.send("✅");
             this.sendTurnMessage();
         } else {
             this.channel.send("Từ phải bắt đầu bằng ký tự của từ cuối cùng!");
+            this.resetGame();
         }
     }
 
     isValidWord(word) {
-        // Kiểm tra từ đã được sử dụng chưa
         if (this.words.includes(word)) return false;
-
-        // Kiểm tra từ có đúng định dạng 2 chữ không
         if (word.split(' ').length !== 2) return false;
-
         return true;
     }
 
@@ -85,6 +87,7 @@ class WordChainGame {
     }
 
     resetGame() {
+        this.channel.send("Trò chơi đã được reset.");
         this.players = [];
         this.words = [];
         this.currentWord = '';
