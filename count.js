@@ -1,58 +1,74 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 
 class CountingGame {
     constructor(channel) {
         this.channel = channel;
-        this.currentNumber = 1;
+        this.currentNumber = 0;
         this.lastUser = null;
-        this.inProgress = true;
+        this.inProgress = false;
     }
 
-    async handleMessage(message) {
-        if (!this.inProgress) return;
+    startGame() {
+        this.currentNumber = 0;
+        this.lastUser = null;
+        this.inProgress = true;
+        this.channel.send('Trò chơi đếm số bắt đầu! Hãy bắt đầu với số 1.');
+    }
 
-        // Kiểm tra nếu người dùng gửi hình ảnh
+    endGame() {
+        this.inProgress = false;
+        this.channel.send('Trò chơi kết thúc.');
+    }
+
+    resetGame() {
+        this.currentNumber = 0;
+        this.lastUser = null;
+        this.channel.send('Trò chơi đã được reset. Hãy bắt đầu lại với số 1.');
+    }
+
+    async processCount(message) {
+        const content = message.content.trim();
+        const nextNumber = this.currentNumber + 1;
+
+        // Kiểm tra nếu tin nhắn chứa hình ảnh
         if (message.attachments.size > 0) {
-            await message.reply("Không hình ảnh!");
+            this.channel.send('Không chấp nhận hình ảnh. Trò chơi sẽ được reset.');
             this.resetGame();
             return;
         }
 
-        const content = message.content.trim();
-        const user = message.author;
-
-        // Kiểm tra nếu người dùng nhập số hoặc biểu thức toán học đúng
-        if (this.isValidCount(content)) {
-            const nextNumber = eval(content);
-            if (nextNumber === this.currentNumber && user !== this.lastUser) {
-                await message.react("✅");
-                this.currentNumber++;
-                this.lastUser = user;
-            } else {
-                await message.react("❌");
-                if (user === this.lastUser) {
-                    await message.reply("Bạn không thể count 2 lần liên tục!");
-                } else {
-                    await message.reply("Sai số!");
-                }
-                this.resetGame();
-            }
-        } else {
-            await message.react("❌");
-            await message.reply("Sai số!");
+        // Kiểm tra nếu người chơi nhập công thức toán học hoặc số
+        const validExpression = /^[\d\s+\-*/()]+$/;
+        if (!validExpression.test(content)) {
+            this.channel.send('Nhập không hợp lệ. Trò chơi sẽ được reset.');
             this.resetGame();
+            return;
         }
-    }
 
-    isValidCount(content) {
-        // Kiểm tra nếu content chỉ chứa số hoặc biểu thức toán học hợp lệ
-        return /^(\d+|\d+[\+\-\*\/]\d+)$/.test(content);
-    }
+        try {
+            const result = eval(content);
+            if (result !== nextNumber) {
+                this.channel.send(`Sai số! Bạn phải nhập số ${nextNumber}. Trò chơi sẽ được reset.`);
+                this.resetGame();
+                return;
+            }
+        } catch (error) {
+            this.channel.send('Nhập không hợp lệ. Trò chơi sẽ được reset.');
+            this.resetGame();
+            return;
+        }
 
-    resetGame() {
-        this.currentNumber = 1;
-        this.lastUser = null;
-        this.inProgress = true;
+        // Kiểm tra nếu người chơi đếm hai lần liên tiếp
+        if (message.author.id === this.lastUser) {
+            this.channel.send('Bạn không thể đếm hai lần liên tiếp. Trò chơi sẽ được reset.');
+            this.resetGame();
+            return;
+        }
+
+        // Cập nhật trạng thái trò chơi
+        this.currentNumber = nextNumber;
+        this.lastUser = message.author.id;
+        await message.react('✅');
     }
 }
 
