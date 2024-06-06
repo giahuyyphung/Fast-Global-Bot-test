@@ -1,13 +1,15 @@
 const Discord = require("discord.js");
 const globalChannels = [
-    "1245681386648506480",
-    "1216985264069541932" // UNAVAILABLE CHANNEL
+    "1247852737631354892",
+    "1247855628299272293",
+    "1246382467276079135",
+    "1247891607341236234"// UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
 
-const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
-const botStaffIds = ["1112683447366991923"]; // Replace with actual staff bot IDs
-const partneredServerIds = ["1079700191634014298"]; // Replace with actual partnered server IDs
-const ownerIds = ["1143200917097808044"]; // Replace with actual owner IDs
+const staffIds = ["1055695302386012212", "948220309176221707"]; // Replace with actual staff member IDs
+const botStaffIds = ["1112683447366991923", "1236505346814644326"]; // Replace with actual staff bot IDs
+const partneredServerIds = ["1090877567210356768","1220232261228564601", "1003698094187216898"]; // Replace with actual partnered server IDs
+const ownerIds = ["1015763488938938388", "1242330820677603359", "1157629753742856222"]; // Replace with actual owner IDs
 
 module.exports = client => {
     // First some supportive buttons!
@@ -53,6 +55,9 @@ module.exports = client => {
 
             // Add icons for staff, bot staff, and partnered servers
             if (staffIds.includes(message.author.id)) {
+                embed.setDescription(`<a:hc_Moderator:1094886268942422097> ${embed.description}`);
+            }
+            if (ownerIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
             }
 
