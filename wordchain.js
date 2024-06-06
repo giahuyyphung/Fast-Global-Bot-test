@@ -43,8 +43,14 @@ class WordChainGame {
     processWord(word, player) {
         if (!this.inProgress) return;
 
-        if (this.lastPlayer === player) {
-            this.channel.send(`${player.username}, bạn không thể nối 2 lần liên tiếp.`);
+        if (player === this.lastPlayer) {
+            this.channel.send("Bạn không thể nối 2 lần liên tiếp!");
+            this.resetGame();
+            return;
+        }
+
+        if (this.containsImage(word)) {
+            this.channel.send("Không được gửi hình ảnh!");
             this.resetGame();
             return;
         }
@@ -57,17 +63,18 @@ class WordChainGame {
 
         const lastChar = this.currentWord.split(' ').pop();
         const firstChar = word.split(' ')[0];
-        if (!this.currentWord || firstChar === lastChar) {
+        if (firstChar === lastChar) {
             this.words.push(word);
             this.currentWord = word;
             this.lastPlayer = player;
             this.turn = (this.turn + 1) % this.players.length;
 
+            // Bỏ qua lượt nếu người chơi hiện tại là người chơi cuối cùng
             if (this.players[this.turn] === this.lastPlayer) {
                 this.turn = (this.turn + 1) % this.players.length;
             }
 
-            this.channel.send("✅");
+            player.send("✅");
             this.sendTurnMessage();
         } else {
             this.channel.send("Từ phải bắt đầu bằng ký tự của từ cuối cùng!");
@@ -81,13 +88,16 @@ class WordChainGame {
         return true;
     }
 
+    containsImage(message) {
+        return message.attachments && message.attachments.some(attachment => attachment.width);
+    }
+
     endGame() {
         this.channel.send("Trò chơi kết thúc!");
         this.resetGame();
     }
 
     resetGame() {
-        this.channel.send("Trò chơi đã được reset.");
         this.players = [];
         this.words = [];
         this.currentWord = '';
